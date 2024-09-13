@@ -13,9 +13,10 @@ form.addEventListener("click", function (e) {
   e.preventDefault();
 });
 
-function createLifts(n) {
-  lifts = [];
-  for (let i = 1; i <= n; i++) {
+// Function to create lift objects and add them to the DOM
+function createLifts(numberOfLifts) {
+  lifts = []; // Reset lifts array
+  for (let i = 1; i <= numberOfLifts; i++) {
     let lift = document.createElement("div");
     lift.className = "lift";
     lift.id = "l" + i;
@@ -23,56 +24,63 @@ function createLifts(n) {
     let right_door = document.createElement("div");
     left_door.classList.add("lift__door", "lift__door-left");
     right_door.classList.add("lift__door", "lift__door-right");
-    left_door.id = "ld" + i;
-    right_door.id = "rd" + i;
+    left_door.id = "left_door" + i;
+    right_door.id = "right_door" + i;
     lift.style.left = `${10 + 10 * i}%`;
     lift.appendChild(left_door);
     lift.appendChild(right_door);
+
+    // Store lift details
     let liftObj = {
       id: i,
       lift: lift,
-      currentFloor: 1,
+      currentFloor: 1, // Lifts start on floor 1 by default
       moving: false,
     };
     lifts.push(liftObj);
   }
 }
 
-function createFloor(floor_number) {
-  let container = document.getElementById("container");
+// Function to create a floor and add control buttons
+function createFloor(floorNumber) {
+  let floorDiv = document.createElement("div");
+  floorDiv.className = "floor";
+  floorDiv.id = "floor" + floorNumber;
 
-  let new_div = document.createElement("div");
-  new_div.className = "floor";
-  new_div.id = "floor" + floor_number;
-  let new_up_btn = document.createElement("button");
-  let up_text = document.createTextNode("Up");
-  let new_down_btn = document.createElement("button");
-  let down_text = document.createTextNode("Down");
-  let new_br = document.createElement("br");
+  // Create Up and Down buttons for the floor
+  let upButton = document.createElement("button");
+  let downButton = document.createElement("button");
+  upButton.textContent = "Up";
+  downButton.textContent = "Down";
+  upButton.classList.add("control-btn", "control-btn--up");
+  downButton.classList.add("control-btn", "control-btn--down");
+  upButton.id = "up" + floorNumber;
+  downButton.id = "down" + floorNumber;
+
+  // Create a label to show the floor number
+  let floorLabel = document.createElement("span");
+  floorLabel.className = "floor__number";
+  floorLabel.textContent = `Floor ${floorNumber}`;
   let new_hr = document.createElement("hr");
-  let new_span = document.createElement("span");
-  new_span.className = "floor__number";
   new_hr.className = "hr";
-  new_hr.id = "hr" + floor_number;
-  new_up_btn.classList.add("control-btn", "control-btn--up");
-  new_down_btn.classList.add("control-btn", "control-btn--down");
-  new_up_btn.appendChild(up_text);
-  new_up_btn.id = "up" + floor_number;
-  new_down_btn.appendChild(down_text);
-  new_down_btn.id = "down" + floor_number;
-  new_div.appendChild(new_up_btn);
-  new_div.appendChild(new_br);
-  new_div.appendChild(new_down_btn);
-  new_div.appendChild(new_span);
-  new_div.appendChild(new_hr);
-  container.insertBefore(new_div, container.childNodes[0]);
+  new_hr.id = "hr" + floorNumber;
+
+  // Add all elements to the floor
+  floorDiv.appendChild(upButton);
+  floorDiv.appendChild(document.createElement("br"));
+  floorDiv.appendChild(downButton);
+  floorDiv.appendChild(floorLabel);
+  floorDiv.appendChild(new_hr);
+
+  // Add the floor to the container (insert at the top)
+  container.insertBefore(floorDiv, container.firstChild);
 }
 
 function closeDoor(e) {
   let target_id = e.target.id;
   let lift_no = target_id[target_id.length - 1];
-  let left_door = document.getElementById("ld" + lift_no);
-  let right_door = document.getElementById("rd" + lift_no);
+  let left_door = document.getElementById("left_door" + lift_no);
+  let right_door = document.getElementById("right_door" + lift_no);
   right_door.removeEventListener("webkitTransitionEnd", closeDoor);
   left_door.style.transform = `translateX(0)`;
   right_door.style.transform = `translateX(0)`;
@@ -97,8 +105,8 @@ function doorAnimation(e) {
   let lift_no = target_id[target_id.length - 1];
   let lift = document.getElementById("l" + lift_no);
   lift.removeEventListener("webkitTransitionEnd", doorAnimation);
-  let left_door = document.getElementById("ld" + lift_no);
-  let right_door = document.getElementById("rd" + lift_no);
+  let left_door = document.getElementById("left_door" + lift_no);
+  let right_door = document.getElementById("right_door" + lift_no);
   left_door.removeEventListener("webkitTransitionEnd", doorAnimation);
   right_door.removeEventListener("webkitTransitionEnd", doorAnimation);
   right_door.addEventListener("webkitTransitionEnd", closeDoor);
@@ -121,6 +129,7 @@ function scheduledLift(floor) {
   return selected_lift;
 }
 
+/** */
 function moveLift(lift, to) {
   let distance = -1 * (to - 1) * 100;
   let lift_no = lift.id;
