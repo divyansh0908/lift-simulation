@@ -7,6 +7,7 @@ let no_of_floors;
 let no_of_lifts;
 let intervalId;
 let tempInterval;
+let pressedButtonQueue = [];
 
 let form = document.getElementById("form");
 form.addEventListener("click", function (e) {
@@ -87,7 +88,9 @@ function createFloor(floorNumber) {
 }
 
 function closeDoor(e) {
+  console.log("closeDoor", q);
   let target_id = e.target.id;
+  console.log("closeDoor", target_id);
   let lift_no = target_id[target_id.length - 1];
   let left_door = document.getElementById("left_door" + lift_no);
   let right_door = document.getElementById("right_door" + lift_no);
@@ -102,6 +105,7 @@ function closeDoor(e) {
 }
 
 function stop_lift(lift_no) {
+  console.log("stop_lift");
   for (lft of lifts) {
     if (lft.id == lift_no) {
       lft.moving = false;
@@ -110,6 +114,7 @@ function stop_lift(lift_no) {
 }
 
 function doorAnimation(e) {
+  console.log("doorAnimation");
   let target_id = e.target.id;
   // NOTE :- BAD ASSUMPTION , MAX LIFTS = 9
   let lift_no = target_id[target_id.length - 1];
@@ -127,6 +132,7 @@ function doorAnimation(e) {
 }
 
 function scheduledLift(floor) {
+  console.log("scheduledLift", q);
   let selected_lift;
   let min_distance = Infinity;
 
@@ -141,6 +147,7 @@ function scheduledLift(floor) {
 
 /** */
 function moveLift(lift, to) {
+  console.log("moveLift", { lift, to });
   let distance = -1 * (to - 1) * 100;
   let lift_no = lift.id;
   let from = lift.currentFloor;
@@ -156,18 +163,31 @@ function moveLift(lift, to) {
     e.target.id = `l${lift_no}`;
     doorAnimation(e);
   }
+  setTimeout(() => {
+    document.getElementById(pressedButtonQueue[0]).disabled = false;
+    pressedButtonQueue.shift();
+  }, (time * 1000 + 4000));
+
   lft.style.transitionDuration = `${time}s`;
 }
 
 function save_click(e) {
   let clicked_on = e.target.id;
   let n;
-  if (clicked_on.startsWith("up"))
+  console.log("save_click", n, clicked_on);
+  if (clicked_on.startsWith("up")) {
     n = Number(clicked_on.substring(2, clicked_on.length));
-  else if (clicked_on.startsWith("down"))
+    document.getElementById("up" + n).disabled = true;
+    pressedButtonQueue.push("up" + n);
+  } else if (clicked_on.startsWith("down")) {
     n = Number(clicked_on.substring(4, clicked_on.length));
+    document.getElementById("down" + n).disabled = true;
+    pressedButtonQueue.push("down" + n);
+    // enable after reaching the floor
+  }
   q.push(n);
 }
+
 
 function getButtons() {
   let up_btn_list = document.getElementsByClassName("control-btn--up");
@@ -213,10 +233,12 @@ function check_for_scheduling() {
   if (q.length === 0) return;
   floor = q.shift();
   let lift = scheduledLift(floor);
+  console.log("scheduling", { lift, floor, q });
   if (!lift) {
     q.unshift(floor);
     return;
   }
+  console.log("jjj", { lift, floor, q });
   moveLift(lift, floor);
 }
 
