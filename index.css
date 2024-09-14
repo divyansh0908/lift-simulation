@@ -84,8 +84,16 @@ body {
   background-color: #7a77ea;
 }
 
+.control-btn--up:active {
+  background-color: #5f5ce6;
+}
+
 .control-btn--down {
   background-color: #ae4949;
+}
+
+.control-btn--down:active {
+  background-color: #8e3b3b;
 }
 
 .arrow-icon {
