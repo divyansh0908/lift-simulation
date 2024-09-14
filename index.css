@@ -29,6 +29,7 @@ body {
 .control--floor-input,
 .control--lift-input {
   margin: 5px;
+  width: 180px;
 }
 
 .control--floor-input input,
