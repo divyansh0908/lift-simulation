@@ -65,19 +65,20 @@ function createFloor(floorNumber) {
   new_hr.className = "hr";
   new_hr.id = "hr" + floorNumber;
 
-  // only add down button if floor number is not 1
-  if (floorNumber !== 1) {
-    floorDiv.appendChild(downButton);
+  // Disable the Up button if the floor is the top floor
+  if (floorNumber === parseInt(no_of_floors)) {
+    upButton.disabled = true;
   }
 
-  // only add up button if floor number is not the last floor
-  if (floorNumber !== parseInt(no_of_floors)) {
-    console.log('::::::', { floorNumber, no_of_floors})
-    floorDiv.appendChild(upButton);
+  // Disable the Down button if the floor is the bottom floor
+  if (floorNumber === 1) {
+    downButton.disabled = true;
   }
 
-   // Add rest all elements to the floor
+  // Add all elements to the floor
+  floorDiv.appendChild(upButton);
   floorDiv.appendChild(document.createElement("br"));
+  floorDiv.appendChild(downButton);
   floorDiv.appendChild(floorLabel);
   floorDiv.appendChild(new_hr);
 
