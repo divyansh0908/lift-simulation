@@ -253,6 +253,7 @@ function start() {
   q = [];
   lifts = [];
   if (parseInt(input_floors.value) < 1 || parseInt(input_lifts.value) < 1) {
+    alert("Please enter valid values");
     return;
   }
   make_floors();
