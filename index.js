@@ -202,6 +202,9 @@ function getButtons() {
 
 function make_lifts() {
   no_of_lifts = input_lifts.value;
+  if (parseInt(no_of_lifts) < 1) {
+    return;
+  }
   createLifts(no_of_lifts);
   for (lft of lifts) {
     let lift = lft.lift;
@@ -213,6 +216,9 @@ function make_lifts() {
 function make_floors() {
   container.innerHTML = "";
   no_of_floors = input_floors.value;
+  if (parseInt(no_of_floors) < 1) {
+    return;
+  }
 
   for (let i = 1; i <= no_of_floors; i++) {
     createFloor(i);
@@ -246,6 +252,9 @@ function start() {
   clearInterval(intervalId);
   q = [];
   lifts = [];
+  if (parseInt(input_floors.value) < 1 || parseInt(input_lifts.value) < 1) {
+    return;
+  }
   make_floors();
   make_lifts();
   place_lifts();
