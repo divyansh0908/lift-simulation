@@ -27,7 +27,11 @@ function createLifts(numberOfLifts) {
     right_door.classList.add("lift__door", "lift__door-right");
     left_door.id = "left_door" + i;
     right_door.id = "right_door" + i;
-    lift.style.left = `${10 + 10 * i}%`;
+    if (window.innerWidth < 900) {
+      lift.style.left = `${15 + 45 * (i-1)}%`;
+    } else {
+      lift.style.left = `${5 + 10 * i}%`;
+    }
     lift.appendChild(left_door);
     lift.appendChild(right_door);
 
@@ -61,10 +65,20 @@ function createFloor(floorNumber) {
   // Create a label to show the floor number
   let floorLabel = document.createElement("span");
   floorLabel.className = "floor__number";
-  floorLabel.textContent = `Floor ${floorNumber}`;
   let new_hr = document.createElement("hr");
   new_hr.className = "hr";
   new_hr.id = "hr" + floorNumber;
+  const width = window.innerWidth;
+  // give the width of the hr according to the number of lifts
+  console.log('width', width, no_of_lifts);
+  if (window.innerWidth < 900) {
+    const required_width = (15 + 45 * no_of_lifts);
+    new_hr.style.width = required_width + "%";
+    
+  } else {
+    const required_width = (5 + 50 * no_of_lifts);
+    new_hr.style.width = required_width + "%";
+  }
 
   // Disable the Up button if the floor is the top floor
   if (floorNumber === parseInt(no_of_floors)) {
@@ -166,7 +180,7 @@ function moveLift(lift, to) {
   setTimeout(() => {
     document.getElementById(pressedButtonQueue[0]).disabled = false;
     pressedButtonQueue.shift();
-  }, (time * 1000 + 4000));
+  }, time * 1000 + 4000);
 
   lft.style.transitionDuration = `${time}s`;
 }
@@ -187,7 +201,6 @@ function save_click(e) {
   }
   q.push(n);
 }
-
 
 function getButtons() {
   let up_btn_list = document.getElementsByClassName("control-btn--up");
