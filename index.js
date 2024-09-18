@@ -28,7 +28,7 @@ function createLifts(numberOfLifts) {
     left_door.id = "left_door" + i;
     right_door.id = "right_door" + i;
     if (window.innerWidth < 900) {
-      lift.style.left = `${15 + 45 * (i-1)}%`;
+      lift.style.left = `${15 + 45 * (i - 1)}%`;
     } else {
       lift.style.left = `${5 + 10 * i}%`;
     }
@@ -70,13 +70,12 @@ function createFloor(floorNumber) {
   new_hr.id = "hr" + floorNumber;
   const width = window.innerWidth;
   // give the width of the hr according to the number of lifts
-  console.log('width', width, no_of_lifts);
+  console.log("width", width, no_of_lifts);
   if (window.innerWidth < 900) {
-    const required_width = (15 + 45 * no_of_lifts);
+    const required_width = 15 + 45 * no_of_lifts;
     new_hr.style.width = required_width + "%";
-    
   } else {
-    const required_width = (5 + 50 * no_of_lifts);
+    const required_width = 5 + 15 * no_of_lifts;
     new_hr.style.width = required_width + "%";
   }
 
@@ -265,6 +264,11 @@ function start() {
   clearInterval(intervalId);
   q = [];
   lifts = [];
+  // if not a natural number, return and alert
+  if (!parseInt(input_floors.value) || !parseInt(input_lifts.value)) {
+    alert("Please enter valid values");
+    return;
+  }
   if (parseInt(input_floors.value) < 1 || parseInt(input_lifts.value) < 1) {
     alert("Please enter valid values");
     return;
